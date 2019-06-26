@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"codes/echo"
+	"fmt"
+	"os"
+	"strings"
+)
 
 func main() {
-	fmt.Printf("hello, world\n")
+	fmt.Println(echo.Echo(strings.Join(os.Args[1:], " ")))
 }

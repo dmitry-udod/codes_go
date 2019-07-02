@@ -1,3 +1,7 @@
-*.iml
-*.ipr
-*.iws
+codes.iml
+misc.xml
+modules.xml
+vcs.xml
+codes.log
+codes_go
+logs/*

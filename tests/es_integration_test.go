@@ -2,14 +2,16 @@ package tests
 
 import (
 	"encoding/json"
-	"github.com/dmitry-udod/codes_go/models"
-	"github.com/dmitry-udod/codes_go/services"
+	"github.com/dmitry-udod/codes_go/app/models"
+	"github.com/dmitry-udod/codes_go/app/services"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 const TEST_INDEX = "tests"
 const TEST_DOCUMENT_ID = "1568827652"
+const TEST_FOP_ID = "4237321928"
+const TEST_FOP_NAME = "Столяров Руслан Миколайович"
 
 func TestSaveAndSearchData(t *testing.T) {
 	checkConnectionToEsServer(t)
@@ -35,13 +37,13 @@ func TestSaveAndSearchData(t *testing.T) {
 
 func checkConnectionToEsServer(t *testing.T) bool {
 	isConnected := services.InitElasticSearchClient()
-	
+
 	if (isConnected) {
 		clearTestIndex()
 	} else {
 		t.Skip("Elastic Search server not running")
 	}
-	
+
 	return isConnected
 }
 

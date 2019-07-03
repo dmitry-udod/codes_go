@@ -7,6 +7,8 @@ import (
 	"strconv"
 )
 
+const INDEX_FOP = "fops"
+
 type Record struct {
 	XMLName  xml.Name `xml:"RECORD" json:"-"`
 	FullName string   `xml:"FIO" json:"full_name"`
@@ -15,7 +17,7 @@ type Record struct {
 	Status   string   `xml:"STAN" json:"status"`
 }
 
-func (r Record)  GenerateId() string {
+func (r *Record) GenerateId() string {
 	text := r.FullName + r.Address
 	algorithm := fnv.New32a()
 	algorithm.Write([]byte(text))

@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/dmitry-udod/codes_go/app/models"
 	. "github.com/dmitry-udod/codes_go/logger"
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
@@ -179,6 +180,18 @@ func DeleteDataFromEs(index, id string) bool {
 	Log.Errorf("[%s] Delete document %s from index", res.Status(), id)
 
 	return true
+}
+
+func SearchFop(code string) *models.Record {
+	record := new(models.Record)
+	entities := Search(models.INDEX_FOP, code)
+
+	if len(entities) > 0 {
+		record.ParseFromSearch(entities[0])
+		record.GenerateId()
+	}
+
+	return record
 }
 
 type bulkResponse struct {

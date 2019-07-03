@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/public/css/app.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <div class="container mx-auto rounded h-screen">
+            <nav class="font-sans flex flex-col text-center content-center sm:flex-row sm:text-left sm:justify-between py-2 px-6 bg-white shadow sm:items-baseline w-full">
+                <div class="mb-2 sm:mb-0 inner">
+                    <a href="/" class="text-2xl no-underline text-grey-darkest font-sans font-bold text-blue-500">відкриті ДАні</a><br>
+                    <span class="text-xs text-blue-500">https://da.org.ua</span>
+                </div>
+
+                <div class="sm:mb-0 self-center">
+                    <a href="/fop" class="text-blue-500 hover:text-blue-700 ml-2 px-1">ФОПи</a>
+                </div>
+            </nav>
+
+            <div class="w-full h-full shadow-lg">
+                <div class="p-5 w-full">
+                    <input type="search" placeholder="Повне Ім'я, Прізвище, Місто, etc." class="shadow appearance-none border rounded w-11/12 py-2 px-3 text-grey-darker">
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">
+                        Пошук
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/public/js/app.js"></script>
+</body>
+</html>

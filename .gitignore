@@ -5,3 +5,6 @@ vcs.xml
 codes.log
 codes_go
 logs/*
+node_modules/
+yarn-error.log
+1.go

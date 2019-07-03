@@ -184,6 +184,12 @@ func DeleteDataFromEs(index, id string) bool {
 
 func SearchFop(code string) *models.Record {
 	record := new(models.Record)
+
+	if ! InitElasticSearchClient() {
+		Log.Error("ES server iis not available")
+		return record
+	}
+
 	entities := Search(models.INDEX_FOP, code)
 
 	if len(entities) > 0 {

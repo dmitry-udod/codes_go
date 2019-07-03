@@ -11,6 +11,9 @@ import (
 func SetupRouter() *gin.Engine  {
 	router := gin.New()
 
+	router.Static("/public", "./public")
+	router.LoadHTMLGlob("app/views/*")
+
 	v1 := router.Group("/api/v1")
 	{
 		if os.Getenv("GIN_MODE") == "release" {
@@ -28,6 +31,8 @@ func SetupRouter() *gin.Engine  {
 
 		v1.GET("/fop/:code", controllers.FindFopById)
 	}
+
+	router.GET("/", controllers.Main)
 
 	return router
 }

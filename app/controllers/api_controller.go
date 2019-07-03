@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/dmitry-udod/codes_go/app/services"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func FindFopById(c *gin.Context) {
@@ -11,7 +12,7 @@ func FindFopById(c *gin.Context) {
 	record := services.SearchFop(code)
 
 	if record.FullName != "" {
-		c.JSON(200, record)
+		c.JSON(http.StatusOK, record)
 		return
 	}
 
@@ -19,5 +20,5 @@ func FindFopById(c *gin.Context) {
 }
 
 func EntityNotfound(c *gin.Context) {
-	c.AbortWithStatusJSON(404, gin.H{"error": "Not Found"})
+	c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "Not Found"})
 }

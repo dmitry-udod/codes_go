@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	router2 "github.com/dmitry-udod/codes_go/app/router"
+	router "github.com/dmitry-udod/codes_go/app/router"
 	"github.com/dmitry-udod/codes_go/app/services"
 	"github.com/dmitry-udod/codes_go/cmd"
 	. "github.com/dmitry-udod/codes_go/logger"
@@ -15,8 +15,8 @@ func main() {
 	InitLogger()
 	services.InitElasticSearchClient()
 	if ! isCliCommand() {
-		router := router2.SetupRouter()
-		router.Run()
+		r := router.SetupRouter()
+		r.Run()
 	}
 }
 

@@ -10,13 +10,17 @@ import (
 
 func SetupRouter() *gin.Engine  {
 	router := gin.New()
+	mode := os.Getenv("GIN_MODE")
 
 	router.Static("/public", "./public")
-	router.LoadHTMLGlob("app/views/*")
+
+	if _, err := os.Stat("app/views"); ! os.IsNotExist(err) {
+		router.LoadHTMLGlob("app/views/*")
+	}
 
 	v1 := router.Group("/api/v1")
 	{
-		if os.Getenv("GIN_MODE") == "release" {
+		if mode == "release" {
 			v1.Use(throttle.Policy(&throttle.Quota{
 				Limit:  60,
 				Within: time.Minute,
@@ -29,7 +33,9 @@ func SetupRouter() *gin.Engine  {
 			})
 		})
 
-		v1.GET("/fop/:code", controllers.FindFopById)
+		v1.GET("/fop/view/:code", controllers.FopSearch)
+		v1.GET("/fop/search/:q", controllers.FopSearch)
+		v1.GET("/fop/latest", controllers.FopLatest)
 	}
 
 	router.GET("/", controllers.Main)

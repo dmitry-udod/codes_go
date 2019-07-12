@@ -15,12 +15,5 @@ mix.js('resources/js/app.js', 'public/js')
     .version();
 
 mix.postCss('resources/css/app.css', 'public/css', [
-    require('tailwindcss'),
-])
-
-// mix.sass('resources/sass/app.scss', 'public/css')
-//     .setPublicPath('public')
-//     .options({
-//         processCssUrls: false,
-//     })
-//     .version();
+    
+]);

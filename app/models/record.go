@@ -17,6 +17,11 @@ type Record struct {
 	Status   string   `xml:"STAN" json:"status"`
 }
 
+type RecordWithId struct {
+	Record
+	Id   string   `json:"id"`
+}
+
 func (r *Record) GenerateId() string {
 	text := r.FullName + r.Address
 	algorithm := fnv.New32a()

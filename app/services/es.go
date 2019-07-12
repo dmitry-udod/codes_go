@@ -9,6 +9,7 @@ import (
 	. "github.com/dmitry-udod/codes_go/logger"
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
+	"strconv"
 	"strings"
 )
 
@@ -50,16 +51,25 @@ func InitElasticSearchClient() bool {
 	return true
 }
 
-func Search(index, id string) []interface{} {
+func Search(index string, params map[string]string) ([]interface{}, models.Metadata) {
+	id, idExist := params["id"]
+	page, _ := strconv.Atoi(params["page"])
+	perPage := 10
+
 	var r map[string]interface{}
 	var buf bytes.Buffer
-	query := map[string]interface{}{
-		"query": map[string]interface{}{
-			"match": map[string]interface{}{
-				"_id": id,
+
+	query := map[string]interface{}{}
+	if idExist {
+		query = map[string]interface{}{
+			"query": map[string]interface{}{
+				"match": map[string]interface{}{
+					"_id": id,
+				},
 			},
-		},
+		}
 	}
+
 	if err := json.NewEncoder(&buf).Encode(query); err != nil {
 		Log.Errorf("Error encoding query: %s", err)
 	}
@@ -71,7 +81,8 @@ func Search(index, id string) []interface{} {
 		Es.Search.WithBody(&buf),
 		Es.Search.WithTrackTotalHits(true),
 		Es.Search.WithPretty(),
-		Es.Search.WithSize(1),
+		Es.Search.WithSize(perPage),
+		Es.Search.WithFrom(page*perPage),
 	)
 	if err != nil {
 		Log.Errorf("Error getting response: %s", err)
@@ -95,14 +106,19 @@ func Search(index, id string) []interface{} {
 		Log.Errorf("Error parsing the response body: %s", err)
 	}
 
+	total := int(r["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"].(float64))
 	Log.Printf(
 		"[%s] %d hits; took: %dms",
 		res.Status(),
-		int(r["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"].(float64)),
+		total,
 		int(r["took"].(float64)),
 	)
 
-	return r["hits"].(map[string]interface{})["hits"].([]interface{})
+	metadata := models.Metadata{
+		Total: uint(total),
+	}
+
+	return r["hits"].(map[string]interface{})["hits"].([]interface{}), metadata
 }
 
 func SaveDataToEs(index string, data map[string]string) *bulkResponse {
@@ -182,22 +198,29 @@ func DeleteDataFromEs(index, id string) bool {
 	return true
 }
 
-func SearchFop(code string) *models.Record {
-	record := new(models.Record)
+func SearchFop(params map[string]string) ([]*models.RecordWithId, models.Metadata) {
+	records := make([]*models.RecordWithId, 0)
+	metadata := models.Metadata{}
 
 	if ! InitElasticSearchClient() {
 		Log.Error("ES server iis not available")
-		return record
+		return records, metadata
 	}
 
-	entities := Search(models.INDEX_FOP, code)
+	entities, metadata := Search(models.INDEX_FOP, params)
 
 	if len(entities) > 0 {
-		record.ParseFromSearch(entities[0])
-		record.GenerateId()
+		for _, entity := range entities {
+			record := models.Record{}
+			record.ParseFromSearch(entity)
+			recordWithId := new(models.RecordWithId)
+			recordWithId.Record = record
+			recordWithId.Id = record.GenerateId()
+			records = append(records, recordWithId)
+		}
 	}
 
-	return record
+	return records, metadata
 }
 
 type bulkResponse struct {

@@ -2,6 +2,7 @@ package tests
 
 import (
 	"encoding/json"
+	"github.com/dmitry-udod/codes_go/app/controllers"
 	"github.com/dmitry-udod/codes_go/app/models"
 	"github.com/dmitry-udod/codes_go/app/services"
 	"github.com/stretchr/testify/assert"
@@ -27,12 +28,16 @@ func TestSaveAndSearchData(t *testing.T) {
 	assert.Equal(t, 201, resp.Items[0].Index.Status)
 	assert.Equal(t, TEST_DOCUMENT_ID, resp.Items[0].Index.ID)
 
-	entities := services.Search(TEST_INDEX, TEST_DOCUMENT_ID)
+	params := controllers.Params()
+	params["id"] = TEST_DOCUMENT_ID
+
+	entities, metadata := services.Search(TEST_INDEX, params)
 	search := new(models.Record)
 	search.ParseFromSearch(entities[0])
 
 	assert.Equal(t, record.Address, search.Address)
 	assert.Equal(t, record.FullName, search.FullName)
+	assert.Equal(t, uint(1), metadata.Total)
 }
 
 func checkConnectionToEsServer(t *testing.T) bool {

@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="uk">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,29 +7,52 @@
     <link href="/public/css/app.css" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
-        <div class="container mx-auto rounded h-screen">
-            <nav class="font-sans flex flex-col text-center content-center sm:flex-row sm:text-left sm:justify-between py-2 px-6 bg-white shadow sm:items-baseline w-full">
-                <div class="mb-2 sm:mb-0 inner">
-                    <a href="/" class="text-2xl no-underline text-grey-darkest font-sans font-bold text-blue-500">відкриті ДАні</a><br>
-                    <span class="text-xs text-blue-500">https://da.org.ua</span>
-                </div>
+    <div id="app" class="container">
+        <header>
+            <navigation></navigation>
+        </header>
 
-                <div class="sm:mb-0 self-center">
-                    <a href="/fop" class="text-blue-500 hover:text-blue-700 ml-2 px-1">ФОПи</a>
-                </div>
-            </nav>
+        <main role="main">
+            <app></app>
+        </main>
 
-            <div class="w-full h-full shadow-lg">
-                <div class="p-5 w-full">
-                    <input type="search" placeholder="Повне Ім'я, Прізвище, Місто, etc." class="shadow appearance-none border rounded w-11/12 py-2 px-3 text-grey-darker">
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">
-                        Пошук
-                    </button>
+        <footer class="footer">
+            <div class="footer_bottom">
+                <div class="row justify-content-md-between">
+                    <div class="col-md-5 order-1 order-md-2">
+                        <div class="row justify-content-center">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 about-portal_wrap">
+                        <div class="about-portal beta"></div>
+                        <div class="footer_text">
+                            Портал працює в тестовому режимі. Зауваження та пропозиції надсилайте на
+                            <a href="mailto:support@gov.ua">support@da.org.ua</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-lg-8 about-portal_wrap">
+                        <div class="about-portal cc"></div>
+                        <div class="footer_text">
+                            Увесь вміст доступний за ліцензією <a target="_blank" href="javascript:void(0)" class="font-weight-bold" rel="nofollow">Creative Commons Attribution 4.0 International license</a>, якщо не зазначено інше
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="dev-company">
+                            <div class="dev-company_text footer_text">
+                                Дизайн взято з  <a href="https://design.gov.ua" target="_blank" class="font-weight-bold" rel="nofollow">https://design.gov.ua</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </footer>
+   </div>
+
     <script src="/public/js/app.js"></script>
 </body>
 </html>

@@ -27,6 +27,12 @@ func isCliCommand() bool {
 			cmd.ImportFop(os.Args[2])
 			return true
 		}
+
+		if (os.Args[1] == `--import-legal-entity` && os.Args[2] != "") {
+			Log.Info("Run import legal entity command")
+			cmd.ImportLegalEntity(os.Args[2])
+			return true
+		}
 	}
 
 	return false

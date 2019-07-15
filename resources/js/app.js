@@ -10,6 +10,7 @@ import FopStatus from './components/Fop/Status'
 Vue.http = Vue.prototype.$http = axios;
 
 Vue.component('fop-status', FopStatus);
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 Vue.mixin(api);
 

@@ -59,12 +59,14 @@ func ImportFop(filePath string) {
 		if (err != nil) {
 			Log.Error("Cant marshal record to json", record)
 		} else {
-			pack[record.GenerateId()] = string(jsonData)
+			if record.FullName != "" {
+				pack[record.GenerateId()] = string(jsonData)
+			}
 		}
 
 		if bulk > 10000 {
 			fmt.Printf("[ELASTIC] Save data bulk")
-			es.SaveDataToEs("fops", pack)
+			es.SaveDataToEs(INDEX_FOP, pack)
 			bulk = 0
 			pack = make(map[string]string, 0)
 		}
@@ -85,7 +87,7 @@ func DecodeFopXmlString(str string) Record {
 	if err != nil {
 		msg := fmt.Sprintf("Cant decode XML record: %s", str)
 		fmt.Println(msg)
-		Log.Fatal(msg)
+		Log.Errorf(msg)
 	}
 
 	record.FullName = strings.Title(strings.ToLower(record.FullName))

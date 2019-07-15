@@ -33,9 +33,13 @@ func SetupRouter() *gin.Engine  {
 			})
 		})
 
-		v1.GET("/fop/view/:code", controllers.FopSearch)
-		v1.GET("/fop/search/:q", controllers.FopSearch)
+		// FOP
+		v1.GET("/fop/view/:code", controllers.FopFind)
 		v1.GET("/fop/latest", controllers.FopLatest)
+
+		// Legal Entities
+		v1.GET("/legal-entities/latest", controllers.LegalEntitiesLatest)
+		v1.GET("/legal-entities/view/:code", controllers.LegalEntityFind)
 	}
 
 	router.GET("/", controllers.Main)

@@ -9,11 +9,14 @@ import (
 	. "github.com/dmitry-udod/codes_go/logger"
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
+	"math"
 	"strconv"
 	"strings"
 )
 
 var Es *elasticsearch.Client
+
+const MAX_PAGE = 1000
 
 func InitElasticSearchClient() bool {
 	var r map[string]interface{}
@@ -53,6 +56,7 @@ func InitElasticSearchClient() bool {
 
 func Search(index string, params map[string]string) ([]interface{}, models.Metadata) {
 	id, idExist := params["id"]
+	search, queryExist := params["q"]
 	page, _ := strconv.Atoi(params["page"])
 	perPage := 10
 
@@ -70,8 +74,26 @@ func Search(index string, params map[string]string) ([]interface{}, models.Metad
 		}
 	}
 
+	if queryExist && search != "" {
+		query = map[string]interface{}{
+			"query": map[string]interface{}{
+				"multi_match": map[string]interface{}{
+					"query": search,
+					"type": "phrase_prefix",
+					"fields": [5]string{"full_name", "address", "activity"},
+				},
+			},
+		}
+	}
+
 	if err := json.NewEncoder(&buf).Encode(query); err != nil {
 		Log.Errorf("Error encoding query: %s", err)
+	}
+
+	offset := 0
+
+	if page > 1 {
+		offset = (page-1) * perPage
 	}
 
 	// Perform the search request.
@@ -82,7 +104,7 @@ func Search(index string, params map[string]string) ([]interface{}, models.Metad
 		Es.Search.WithTrackTotalHits(true),
 		Es.Search.WithPretty(),
 		Es.Search.WithSize(perPage),
-		Es.Search.WithFrom(page*perPage),
+		Es.Search.WithFrom(offset),
 	)
 	if err != nil {
 		Log.Errorf("Error getting response: %s", err)
@@ -108,14 +130,23 @@ func Search(index string, params map[string]string) ([]interface{}, models.Metad
 
 	total := int(r["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"].(float64))
 	Log.Printf(
-		"[%s] %d hits; took: %dms",
+		"[%s] %d hits; took: %dms; request: %v; offset: %d",
 		res.Status(),
 		total,
 		int(r["took"].(float64)),
+		params,
+		offset,
 	)
 
 	metadata := models.Metadata{
 		Total: uint(total),
+		CurrentPage: uint(page),
+		LastPage: uint(math.Ceil(float64(total) / float64(perPage))),
+		PerPage: uint(perPage),
+	}
+
+	if metadata.LastPage > MAX_PAGE {
+		metadata.LastPage = MAX_PAGE
 	}
 
 	return r["hits"].(map[string]interface{})["hits"].([]interface{}), metadata
@@ -203,7 +234,7 @@ func SearchFop(params map[string]string) ([]*models.RecordWithId, models.Metadat
 	metadata := models.Metadata{}
 
 	if ! InitElasticSearchClient() {
-		Log.Error("ES server iis not available")
+		Log.Error("ES server is not available")
 		return records, metadata
 	}
 
@@ -217,6 +248,28 @@ func SearchFop(params map[string]string) ([]*models.RecordWithId, models.Metadat
 			recordWithId.Record = record
 			recordWithId.Id = record.GenerateId()
 			records = append(records, recordWithId)
+		}
+	}
+
+	return records, metadata
+}
+
+func SearchLegalEntities(params map[string]string) ([]models.LegalEntity, models.Metadata) {
+	records := make([]models.LegalEntity, 0)
+	metadata := models.Metadata{}
+
+	if ! InitElasticSearchClient() {
+		Log.Error("ES server is not available")
+		return records, metadata
+	}
+
+	entities, metadata := Search(models.INDEX_LEGAL_ENTITY, params)
+
+	if len(entities) > 0 {
+		for _, entity := range entities {
+			record := models.LegalEntity{}
+			record.ParseFromSearch(entity)
+			records = append(records, record)
 		}
 	}
 

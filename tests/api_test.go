@@ -45,8 +45,7 @@ func TestFopLatest(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/api/v1/fop/latest", nil)
 	r.ServeHTTP(w, req)
 	assert.Equal(t, 200, w.Code)
-	assert.Contains(t, w.Body.String(), TEST_FOP_NAME)
-	assert.Contains(t, w.Body.String(), TEST_FOP_ID)
+	assert.Contains(t, w.Body.String(), "full_name")
 	assert.Contains(t, w.Body.String(), "metadata")
 	assert.Contains(t, w.Body.String(), `"total":`)
 
@@ -55,4 +54,21 @@ func TestFopLatest(t *testing.T) {
 	r.ServeHTTP(w, req)
 	assert.Equal(t, 200, w.Code)
 	assert.NotContains(t, w.Body.String(), TEST_FOP_NAME)
+}
+
+func TestFopSearchQuery(t *testing.T) {
+	checkConnectionToEsServer(t)
+	r := router.SetupRouter()
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/api/v1/fop/latest?q=Столяров" , nil)
+	r.ServeHTTP(w, req)
+	assert.Equal(t, 200, w.Code)
+	assert.Contains(t, w.Body.String(), "full_name")
+
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest("GET", "/api/v1/fop/latest?q=" + TEST_FOP_NAME, nil)
+	r.ServeHTTP(w, req)
+	assert.Equal(t, 200, w.Code)
+	assert.Contains(t, w.Body.String(), "full_name")
 }

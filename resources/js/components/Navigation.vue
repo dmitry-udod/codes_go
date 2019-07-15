@@ -1,6 +1,6 @@
 <template>
     <section class="header-bg">
-        <a class="main-logo">
+        <a class="main-logo" href="/">
             <div class="icon"></div>
             <span>da.org.ua</span>
             <span class="light">Збірка відкритих даних</span>
@@ -18,8 +18,11 @@
         <div class="header_bottom">
             <nav class="menu" id="menu">
                 <ul class="menu__list" id="menu-desktop">
-                    <li class="menu__list-item" v-bind:class="{'active' : $route.name === 'fop'}">
+                    <li class="menu__list-item" v-bind:class="{'active' : $route.name === 'fop' ||  $route.name === 'main'}">
                         <a @click.stop.prevent="$router.push({'name': 'fop'})">ФОПи</a>
+                    </li>
+                    <li class="menu__list-item" v-bind:class="{'active' : $route.name === 'legal_entities'}">
+                        <a @click.stop.prevent="$router.push({'name': 'legal_entities'})">Юридичні особи</a>
                     </li>
                 </ul>
             </nav>

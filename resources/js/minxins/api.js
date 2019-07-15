@@ -5,11 +5,17 @@ export default {
         return {
             congif: {},
             loading: false,
+            metadata: {},
+            entities: null,
+            q: '',
         }
     },
 
     beforeMount() {
         this.config = require(`../config/api.${process.env.NODE_ENV}`);
+        if (this.$route.params.q) {
+            this.q = this.$route.params.q;
+        }
     },
 
     methods: {
@@ -41,12 +47,22 @@ export default {
             }
         },
 
-        fopLatest(page = 1) {
-            return this.sendRequest('get', `fop/latest?page=${page}`)
+        fopLatest(request) {
+            request = this.formatRequest(request);
+            return this.sendRequest('get', `fop/latest?page=${request.page}&q=${request.q}`);
+        },
+
+        legalEntitiesLatest(request) {
+            request = this.formatRequest(request);
+            return this.sendRequest('get', `legal-entities/latest?page=${request.page}&q=${request.q}`);
         },
 
         fopDetails(id) {
             return this.sendRequest('get', `fop/view/${id}`)
+        },
+
+        legalEntityDetails(id) {
+            return this.sendRequest('get', `legal-entities/view/${id}`)
         },
 
         sendRequest(method, url, data, onlyUrl = false, onlyHost = false) {
@@ -63,5 +79,14 @@ export default {
 
             return this.$http[method](fullUrl, data)
         },
+
+        hasEntities() {
+            return this.entities && this.entities.length > 0;
+        },
+
+        formatRequest(request) {
+            request.q = request.q ? request.q : '';
+            return request
+        }
     }
 }

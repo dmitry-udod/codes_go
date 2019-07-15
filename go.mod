@@ -11,5 +11,6 @@ require (
 	github.com/google/gofuzz v1.0.0 // indirect
 	github.com/sirupsen/logrus v1.4.2
 	github.com/stretchr/testify v1.3.0
+	golang.org/x/net v0.0.0-20190503192946-f4e77d36d62c
 	golang.org/x/text v0.3.2
 )

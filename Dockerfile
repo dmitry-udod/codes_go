@@ -3,9 +3,8 @@ RUN go version
 RUN echo $GOPATH
 RUN mkdir -p $GOPATH/src/github.com/dmitry-udod/codes_go
 WORKDIR $GOPATH/src/github.com/dmitry-udod/codes_go
-ADD go.mod .
-ADD go.sum .
 ADD . .
 RUN ls -lah
+RUN go mod tidy
 RUN go build
 RUN ls -lah

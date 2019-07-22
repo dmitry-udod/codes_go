@@ -1,1 +1,1 @@
-web: codes_go
+web: ./codes_go

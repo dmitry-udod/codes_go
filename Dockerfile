@@ -6,6 +6,6 @@ RUN mkdir -p $GOPATH/src/github.com/dmitry-udod/codes_go
 WORKDIR $GOPATH/src/github.com/dmitry-udod/codes_go
 ADD . .
 RUN ls -lah
-RUN go mod tidy
+RUN apk add --no-cache git
 RUN go build
 RUN ls -lah

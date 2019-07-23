@@ -9,5 +9,6 @@ ADD ./CHECKS ./app
 RUN ls -lah
 RUN ls -lah ./app
 RUN apk add --no-cache git
+RUN apk add --no-cache bash
 RUN go build
 RUN ls -lah

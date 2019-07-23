@@ -5,8 +5,9 @@ RUN echo $GOPATH
 RUN mkdir -p $GOPATH/src/github.com/dmitry-udod/codes_go
 WORKDIR $GOPATH/src/github.com/dmitry-udod/codes_go
 ADD . .
-ADD ./CHECKS $GOPATH/src/github.com/dmitry-udod/codes_go/app
+ADD ./CHECKS ./app
 RUN ls -lah
+RUN ls -lah ./app
 RUN apk add --no-cache git
 RUN go build
 RUN ls -lah

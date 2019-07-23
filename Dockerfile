@@ -5,10 +5,14 @@ RUN echo $GOPATH
 RUN mkdir -p $GOPATH/src/github.com/dmitry-udod/codes_go
 WORKDIR $GOPATH/src/github.com/dmitry-udod/codes_go
 ADD . .
-ADD ./CHECKS ./app
-RUN ls -lah
-RUN ls -lah ./app
-RUN apk add --no-cache git
-RUN apk add --no-cache bash
+
+# Run checks
+RUN mkdir -p /app
+ADD ./CHECKS /app
+
+# Install additional packages
+RUN apk add git
+RUN apk add bash
+
+# build app
 RUN go build
-RUN ls -lah

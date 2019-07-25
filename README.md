@@ -1,4 +1,4 @@
-# Ukraine open data catalog
+# Open data catalog of Ukraine
 Source: https://data.gov.ua
 
 ### Instalation

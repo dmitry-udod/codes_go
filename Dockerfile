@@ -13,6 +13,7 @@ ADD ./CHECKS /app
 # Install additional packages
 RUN apk add git
 RUN apk add bash
+RUN apk add curl
 
 # build app
 RUN go build

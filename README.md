@@ -55,7 +55,7 @@ dokku elasticsearch:info es --status #should return `running`
 dokku elasticsearch:link es da.org.ua
 ```
 
-Edit /var/lib/dokku/services/elasticsearch/es/config/elasticsearch.yml and add in the end of file: 
+Edit `/var/lib/dokku/services/elasticsearch/es/config/elasticsearch.yml` and add in the end of file: 
 ```code
 transport.host: localhost
 ```

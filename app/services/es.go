@@ -129,6 +129,7 @@ func Search(index string, params map[string]string) ([]interface{}, models.Metad
 	}
 
 	total := int(r["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"].(float64))
+
 	Log.Printf(
 		"[%s] %d hits; took: %dms; request: %v; offset: %d",
 		res.Status(),

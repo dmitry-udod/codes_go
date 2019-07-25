@@ -40,6 +40,14 @@ func LegalEntitiesLatest(c *gin.Context) {
 	params["q"] = c.Request.URL.Query().Get("q")
 	records, metadata := services.SearchLegalEntities(params)
 
+	// Search legal entity by code if search results are empty
+	if metadata.Total == 0 {
+		id := params["q"]
+		params = Params();
+		params["id"] = id
+		records, metadata = services.SearchLegalEntities(params)
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"data": records,
 		"metadata": metadata,

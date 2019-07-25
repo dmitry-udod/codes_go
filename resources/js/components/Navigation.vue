@@ -3,7 +3,7 @@
         <a class="main-logo" href="/">
             <div class="icon"></div>
             <span>da.org.ua</span>
-            <span class="light">Збірка відкритих даних</span>
+            <span class="light">Каталог відкритих даних</span>
         </a>
         <div class="row header_content justify-content-center">
             <div class="col-md-1"></div>

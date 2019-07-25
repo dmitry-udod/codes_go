@@ -1,11 +1,26 @@
 # Open data catalog of the Ukraine
-Source: https://data.gov.ua
+Here you can find structured and more readable data from https://data.gov.ua
 
 ### Instalation
+```shell 
+git clone git@github.com:dmitry-udod/codes_go.git
+go run main.go
+```
+
+###Import Data
+
+Download and un-zip data archive
+
+```shell 
+wget https://data.gov.ua/dataset/b244f35a-e50a-4a80-b704-032c42ba8142/resource/b0476139-62f2-4ede-9d3b-884ad99afd08/download/15-ufop.zip
+unzip 15-ufop.zip
+go run main.go --import-legal-entity 15.1-EX_XML_EDR_UO.xml
+go run main.go --import-legal-entity 15.2-EX_XML_EDR_FOP.xml
+```
 
 ### Dokku deployment
 
-##### Remote Server 
+##### Run on Remote Server 
 - install Dokku http://dokku.viewdocs.io/dokku/getting-started/installation/
 
 Create dokku app:
@@ -38,4 +53,13 @@ echo 'vm.max_map_count=262144' | sudo tee -a /etc/sysctl.conf; sudo sysctl -p
 dokku elasticsearch:create es
 dokku elasticsearch:info es --status #should return `running`
 dokku elasticsearch:link es da.org.ua
+```
+
+Edit /var/lib/dokku/services/elasticsearch/es/config/elasticsearch.yml and add in the end of file: 
+```code
+transport.host: localhost
+```
+
+```shell
+dokku elasticsearch:restart es
 ```

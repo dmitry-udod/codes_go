@@ -1,81 +1,70 @@
 package cmd
 
 import (
-	"bufio"
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
 	. "github.com/dmitry-udod/codes_go/app/models"
 	es "github.com/dmitry-udod/codes_go/app/services"
 	. "github.com/dmitry-udod/codes_go/logger"
-	"golang.org/x/text/encoding/charmap"
-	"golang.org/x/text/transform"
-	"log"
+	"golang.org/x/net/html/charset"
 	"os"
 	"strings"
 )
 
-func ImportFop(filePath string) {
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		msg := fmt.Sprintf("File %s NOT found", filePath)
-		fmt.Println(msg)
-		Log.Fatal(msg);
-	}
-
-	Log.Info("Start processing file: " + filePath);
-	file, err := os.Open(filePath)
-	if err != nil {
-		Log.Fatal(err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
+func ImportFop(file *os.File) {
+	decoder := xml.NewDecoder(file)
+	decoder.CharsetReader = charset.NewReaderLabel
 	linesCount := 0
 	bulk := 0
 
 	pack := make(map[string]string, 0)
 
-	for scanner.Scan() {
-		linesCount++
-
-		if (linesCount == 1) {
-			continue
+	for {
+		t, err := decoder.Token()
+		if t == nil {
+			break
 		}
-
-		bulk++
-
-		utfString, _, err := transform.String(charmap.Windows1251.NewDecoder(), scanner.Text())
 
 		if err != nil {
-			Log.Fatal(fmt.Sprintf("Error while string decode %s. On Line: %d", err.Error(), ))
+			Log.Fatalf("cant parse file: %s", err.Error())
+			return
 		}
 
-		fmt.Println(fmt.Sprintf("Process line number: %d", linesCount))
+		switch se := t.(type) {
+		case xml.StartElement:
+			if se.Name.Local == "RECORD" {
+				linesCount++
+				fmt.Println(fmt.Sprintf("Process line number: %d", linesCount))
 
-		record := DecodeFopXmlString(utfString)
+				var record Record
+				err := decoder.DecodeElement(&record, &se)
 
-		jsonData, err := json.Marshal(record)
+				if err != nil {
+					Log.Error(err)
+					continue
+				}
 
-		if (err != nil) {
-			Log.Error("Cant marshal record to json", record)
-		} else {
-			if record.FullName != "" {
-				pack[record.GenerateId()] = string(jsonData)
+				bulk++
+
+				record = decorateFopRecord(record)
+
+				if record.FullName != "" {
+					jsonData, err := json.Marshal(record)
+
+					if err == nil {
+						pack[record.GenerateId()] = string(jsonData)
+					}
+				}
+
+				if bulk > 10000 {
+					fmt.Printf("[ELASTIC] Save data bulk")
+					es.SaveDataToEs(INDEX_FOP, pack)
+					bulk = 0
+					pack = make(map[string]string, 0)
+				}
 			}
 		}
-
-		if bulk > 10000 {
-			fmt.Printf("[ELASTIC] Save data bulk")
-			es.SaveDataToEs(INDEX_FOP, pack)
-			bulk = 0
-			pack = make(map[string]string, 0)
-		}
-	}
-
-	Log.Info("Finish processing file");
-
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
 	}
 }
 
@@ -90,6 +79,12 @@ func DecodeFopXmlString(str string) Record {
 		Log.Errorf(msg)
 	}
 
+	record = decorateFopRecord(record)
+
+	return record
+}
+
+func decorateFopRecord(record Record) Record {
 	record.FullName = strings.Title(strings.ToLower(record.FullName))
 	record.Address = strings.Title(strings.ToLower(record.Address))
 	record.Activity = strings.ToLower(record.Activity)

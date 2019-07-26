@@ -12,20 +12,7 @@ import (
 	es "github.com/dmitry-udod/codes_go/app/services"
 )
 
-func ImportLegalEntity(filePath string) {
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		msg := fmt.Sprintf("File %s NOT found", filePath)
-		fmt.Println(msg)
-		Log.Fatal(msg);
-	}
-
-	Log.Info("Start processing file: " + filePath);
-	file, err := os.Open(filePath)
-	if err != nil {
-		Log.Fatal(err)
-	}
-	defer file.Close()
-
+func ImportLegalEntity(file *os.File) {
 	decoder := xml.NewDecoder(file)
 	decoder.CharsetReader = charset.NewReaderLabel
 	bulk := 0
@@ -40,7 +27,7 @@ func ImportLegalEntity(filePath string) {
 		}
 
 		if err != nil {
-			fmt.Println("cant parse file: ", err.Error())
+			Log.Fatalf("cant parse file: %s", err.Error())
 			return
 		}
 
@@ -89,5 +76,4 @@ func ImportLegalEntity(filePath string) {
 		}
 	}
 
-	Log.Info("Finish processing file: " + filePath);
 }

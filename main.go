@@ -22,18 +22,39 @@ func main() {
 
 func isCliCommand() bool {
 	if (len(os.Args) > 2) {
-		if (os.Args[1] == `--import-fop` && os.Args[2] != "") {
+		filePath := os.Args[2]
+		if _, err := os.Stat(filePath); os.IsNotExist(err) {
+			msg := fmt.Sprintf("File %s NOT found", filePath)
+			fmt.Println(msg)
+			Log.Fatal(msg);
+		}
+
+		file, err := os.Open(filePath)
+		if err != nil {
+			Log.Fatal(err)
+		}
+		defer file.Close()
+
+		Log.Info("Start processing file: " + filePath);
+
+		if (os.Args[1] == `--import-fop`) {
 			Log.Info("Run import FOP command")
-			cmd.ImportFop(os.Args[2])
+			cmd.ImportFop(file)
+			finishFileProcess(filePath)
 			return true
 		}
 
-		if (os.Args[1] == `--import-legal-entity` && os.Args[2] != "") {
+		if (os.Args[1] == `--import-legal-entity`) {
 			Log.Info("Run import legal entity command")
-			cmd.ImportLegalEntity(os.Args[2])
+			cmd.ImportLegalEntity(file)
+			finishFileProcess(filePath)
 			return true
 		}
 	}
 
 	return false
+}
+
+func finishFileProcess(filePath string) {
+	Log.Info("Finish processing file: " + filePath);
 }

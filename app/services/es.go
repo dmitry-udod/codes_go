@@ -80,7 +80,7 @@ func Search(index string, params map[string]string) ([]interface{}, models.Metad
 				"multi_match": map[string]interface{}{
 					"query": search,
 					"type": "phrase_prefix",
-					"fields": [5]string{"full_name", "address", "activity"},
+					"fields": [3]string{"full_name", "address", "activity"},
 				},
 			},
 		}

@@ -15,7 +15,7 @@ Download and un-zip data archive
 wget https://data.gov.ua/dataset/b244f35a-e50a-4a80-b704-032c42ba8142/resource/b0476139-62f2-4ede-9d3b-884ad99afd08/download/15-ufop.zip
 unzip 15-ufop.zip
 go run main.go --import-legal-entity 15.1-EX_XML_EDR_UO.xml
-go run main.go --import-legal-entity 15.2-EX_XML_EDR_FOP.xml
+go run main.go --import-fop 15.2-EX_XML_EDR_FOP.xml
 ```
 
 ### Dokku deployment

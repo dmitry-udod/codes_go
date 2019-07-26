@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	router "github.com/dmitry-udod/codes_go/app/router"
+	"github.com/dmitry-udod/codes_go/app/router"
 	"github.com/dmitry-udod/codes_go/app/services"
 	"github.com/dmitry-udod/codes_go/cmd"
 	. "github.com/dmitry-udod/codes_go/logger"
@@ -21,7 +21,7 @@ func main() {
 }
 
 func isCliCommand() bool {
-	if (len(os.Args) > 2) {
+	if len(os.Args) > 2 {
 		filePath := os.Args[2]
 		if _, err := os.Stat(filePath); os.IsNotExist(err) {
 			msg := fmt.Sprintf("File %s NOT found", filePath)
@@ -37,17 +37,24 @@ func isCliCommand() bool {
 
 		Log.Info("Start processing file: " + filePath);
 
-		if (os.Args[1] == `--import-fop`) {
+		if os.Args[1] == `--import-fop` {
 			Log.Info("Run import FOP command")
 			cmd.ImportFop(file)
 			finishFileProcess(filePath)
 			return true
 		}
 
-		if (os.Args[1] == `--import-legal-entity`) {
+		if os.Args[1] == `--import-legal-entity` {
 			Log.Info("Run import legal entity command")
 			cmd.ImportLegalEntity(file)
 			finishFileProcess(filePath)
+			return true
+		}
+
+		if os.Args[1] == "--generate-site-map" {
+			Log.Info("Start site map generation")
+			cmd.GenerateSiteMap(file)
+			Log.Info("Finish site map generation")
 			return true
 		}
 	}

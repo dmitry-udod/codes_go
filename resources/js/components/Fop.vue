@@ -3,8 +3,8 @@
         <div class="form active m-0">
             <div class="row">
                 <div class="col-xl-9">
-                    <label>Пошук ФОП:</label>
-                    <input type="text" name="key" class="text" autofocus v-model="q" @keyup.enter="search()">
+                    <label for="key">Пошук ФОП:</label>
+                    <input type="text" id="key" name="key" class="text" autofocus v-model="q" @keyup.enter="search()">
                     <span style="position: absolute;top: 40px;right: 25px;cursor: pointer" v-if="q" @click="clearSearch()">х</span>
                     <div id="search-error" class="search-error"></div>
                 </div>

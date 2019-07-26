@@ -42,7 +42,7 @@ dokku config:set --global DOKKU_LETSENCRYPT_EMAIL=YOUR_EMAIL
 dokku domains:enable da.org.ua
 dokku domains:set da.org.ua da.org.ua
 dokku letsencrypt da.org.ua
-dokku proxy:ports-remove da.org.ua https:443:5000
+dokku proxy:ports-add da.org.ua https:443:5000
 ```
 
 Integrate with ElasticSearch:

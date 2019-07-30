@@ -9,8 +9,10 @@ import (
 	"os"
 )
 
+const DOMAIN = "https://da.org.ua"
+
 func GenerateSiteMap(file *os.File) {
-	url := "https://da.org.ua/#/legal-entities/details/"
+	url := DOMAIN + "/#/legal-entities/details/"
 	decoder := xml.NewDecoder(file)
 	decoder.CharsetReader = charset.NewReaderLabel
 	bulk := 0
@@ -23,8 +25,8 @@ func GenerateSiteMap(file *os.File) {
 	}
 	defer f.Close()
 
-	f.WriteString(fmt.Sprintf("%s\n", "https://da.org.ua/#/fop"))
-	f.WriteString(fmt.Sprintf("%s\n", "https://da.org.ua/#/legal-entities"))
+	f.WriteString(fmt.Sprintf("%s%s\n", DOMAIN, "/#/fop"))
+	f.WriteString(fmt.Sprintf("%s%s\n", DOMAIN, "/#/legal-entities"))
 
 	for {
 		// Read tokens from the XML document in a stream.

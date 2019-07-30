@@ -13,6 +13,7 @@ func SetupRouter() *gin.Engine  {
 	mode := os.Getenv("GIN_MODE")
 
 	router.Static("/public", "./public")
+	router.StaticFile("sitemap.txt", "./public/sitemap.txt")
 
 	if _, err := os.Stat("app/views"); ! os.IsNotExist(err) {
 		router.LoadHTMLGlob("app/views/*")

@@ -16,7 +16,7 @@ var generateSiteMap = flag.String("generate-site-map", "", "Generate sitemap fil
 
 func main() {
 	flag.Parse()
-	
+
 	InitLogger()
 	services.InitElasticSearchClient()
 	if ! isCliCommand() {

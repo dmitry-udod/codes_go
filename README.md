@@ -1,13 +1,13 @@
 # Open data catalog of the Ukraine
 [Here](https://da.org.ua/) you can find structured and more readable data from https://data.gov.ua
 
-### Instalation
+### Installation
 ```shell 
 git clone git@github.com:dmitry-udod/codes_go.git
 go run main.go
 ```
 
-###Import Data
+### Import Data
 
 Download and un-zip data archive
 

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"flag"
 	"github.com/dmitry-udod/codes_go/app/router"
 	"github.com/dmitry-udod/codes_go/app/services"
 	"github.com/dmitry-udod/codes_go/cmd"
@@ -9,9 +10,13 @@ import (
 	"os"
 )
 
+var importFop = flag.String("import-fop", "", "Import FOPs from file")
+var importLegalEntity = flag.String("import-legal-entity", "", "Import legal entities from file")
+var generateSiteMap = flag.String("generate-site-map", "", "Generate sitemap files from file")
 
 func main() {
-	fmt.Println("Hello")
+	flag.Parse()
+	
 	InitLogger()
 	services.InitElasticSearchClient()
 	if ! isCliCommand() {
@@ -37,21 +42,21 @@ func isCliCommand() bool {
 
 		Log.Info("Start processing file: " + filePath);
 
-		if os.Args[1] == `--import-fop` {
+		if *importFop != "" {
 			Log.Info("Run import FOP command")
 			cmd.ImportFop(file)
 			finishFileProcess(filePath)
 			return true
 		}
 
-		if os.Args[1] == `--import-legal-entity` {
+		if *importLegalEntity != "" {
 			Log.Info("Run import legal entity command")
 			cmd.ImportLegalEntity(file)
 			finishFileProcess(filePath)
 			return true
 		}
 
-		if os.Args[1] == "--generate-site-map" {
+		if *generateSiteMap != "" {
 			Log.Info("Start site map generation")
 			cmd.GenerateSiteMap(file)
 			Log.Info("Finish site map generation")

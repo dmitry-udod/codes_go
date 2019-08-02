@@ -12,6 +12,7 @@ import (
 
 var importFop = flag.String("import-fop", "", "Import FOPs from file")
 var importLegalEntity = flag.String("import-legal-entity", "", "Import legal entities from file")
+var importTerrorists = flag.String("import-terrorist", "", "Import terrorist list from file")
 var generateSiteMap = flag.String("generate-site-map", "", "Generate sitemap files from file")
 
 func main() {
@@ -51,6 +52,13 @@ func isCliCommand() bool {
 
 		if *importLegalEntity != "" {
 			Log.Info("Run import legal entity command")
+			cmd.ImportLegalEntity(file)
+			finishFileProcess(filePath)
+			return true
+		}
+
+		if *importTerrorists != "" {
+			Log.Info("Run import terrorists command")
 			cmd.ImportLegalEntity(file)
 			finishFileProcess(filePath)
 			return true

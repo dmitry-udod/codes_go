@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"github.com/dmitry-udod/codes_go/cmd"
 	"github.com/stretchr/testify/assert"
+	"log"
+	"os"
 	"testing"
 )
 
@@ -22,4 +24,27 @@ func TestFopXmlStringDecode(t *testing.T) {
 	data, err := json.Marshal(record)
 	assert.Nil(t, err)
 	assert.Equal(t, `{"full_name":"Саєнко Ольга Сергіївна","address":"91007, Луганська Обл., Місто Луганськ, Артемівський Район, Вулиця Привозна, Будинок 55","activity":"47.82 роздрібна торгівля з лотків і на ринках текстильними виробами, одягом і взуттям","status":"припинено"}`, string(data))
+}
+
+func TestTerroristXmlDecode(t *testing.T) {
+	file, err := os.Open("./mocks/terrorists.xml")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	defer file.Close()
+
+	list := cmd.ImportTerrorist(file)
+
+	assert.Equal(t, uint(1133), list.Length)
+	assert.Equal(t, "364", list.Version)
+	assert.Equal(t, "19.07.2019", list.LastUpdated)
+	assert.Equal(t, 2, len(list.Terrorists))
+	assert.Equal(t, uint(3), list.Terrorists[0].Number)
+	assert.Equal(t, uint(4), list.Terrorists[1].Number)
+	assert.Equal(t, "13.10.2010", list.Terrorists[0].AddedAt)
+	assert.Equal(t, "20.05.2011", list.Terrorists[1].AddedAt)
+	assert.Equal(t, "Офіційний веб-сайт ООН", list.Terrorists[0].Source)
+	assert.Equal(t, "Резолюції РБ ООН 1267(1999), 1904 (2009)", list.Terrorists[1].Source)
+	assert.Equal(t, 6, len(list.Terrorists[0].AkaNames))
+	assert.Equal(t, 9, len(list.Terrorists[1].AkaNames))
 }

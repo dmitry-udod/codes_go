@@ -8,3 +8,4 @@ logs/*
 node_modules/
 yarn-error.log
 1.go
+.idea

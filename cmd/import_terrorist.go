@@ -2,12 +2,12 @@ package cmd
 
 import (
 	"encoding/xml"
-	"fmt"
 	"github.com/dmitry-udod/codes_go/app/models"
 	"golang.org/x/net/html/charset"
 	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 )
 
 func ImportTerrorist(file *os.File) TerroristList {
@@ -25,14 +25,30 @@ func ImportTerrorist(file *os.File) TerroristList {
 
 	for index, t := range list.Terrorists {
 		list.Terrorists[index].AddedAt = convertDate(t.AddedAt)
+		list.Terrorists[index].BirthDay = trim(t.BirthDay)
+		for akaIndex, akaName := range t.AkaNames {
+			list.Terrorists[index].AkaNames[akaIndex].FirstName = convertName(akaName.FirstName)
+			list.Terrorists[index].AkaNames[akaIndex].LastName = convertName(akaName.LastName)
+		}
+
+		for birthdayIndex, birthdayPlace := range t.BirthPlaces {
+			list.Terrorists[index].BirthPlaces[birthdayIndex] = trim(birthdayPlace)
+		}
 	}
 
-	fmt.Printf("%v", list)
 	return list
+}
+
+func trim(s string) string {
+	return strings.TrimSpace(s)
 }
 
 func convertDate(s string) string {
 	return s[6:8] + "." + s[4:6] + "." + s[:4]
+}
+
+func convertName(s string) string {
+	return strings.Title(strings.ToLower(s))
 }
 
 type TerroristList struct {

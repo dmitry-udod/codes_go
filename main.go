@@ -59,7 +59,7 @@ func isCliCommand() bool {
 
 		if *importTerrorists != "" {
 			Log.Info("Run import terrorists command")
-			cmd.ImportLegalEntity(file)
+			cmd.ImportTerrorist(file)
 			finishFileProcess(filePath)
 			return true
 		}

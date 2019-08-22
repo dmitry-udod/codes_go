@@ -33,14 +33,14 @@ func TestTerroristXmlDecode(t *testing.T) {
 	}
 	defer file.Close()
 
-	list := cmd.ImportTerrorist(file)
+	list, _ := cmd.ParseTerroristXmlFile(file)
 
-	assert.Equal(t, uint(1133), list.Length)
+	assert.Equal(t, 1133, list.Length)
 	assert.Equal(t, "364", list.Version)
 	assert.Equal(t, "19.07.2019", list.LastUpdated)
 	assert.Equal(t, 2, len(list.Terrorists))
-	assert.Equal(t, uint(3), list.Terrorists[0].Number)
-	assert.Equal(t, uint(4), list.Terrorists[1].Number)
+	assert.Equal(t, 3, list.Terrorists[0].Number)
+	assert.Equal(t, 4, list.Terrorists[1].Number)
 	assert.Equal(t, "13.10.2010", list.Terrorists[0].AddedAt)
 	assert.Equal(t, "20.05.2011", list.Terrorists[1].AddedAt)
 	assert.Equal(t, "Офіційний веб-сайт ООН", list.Terrorists[0].Source)

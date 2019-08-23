@@ -41,6 +41,10 @@ func SetupRouter() *gin.Engine  {
 		// Legal Entities
 		v1.GET("/legal-entities/latest", controllers.LegalEntitiesLatest)
 		v1.GET("/legal-entities/view/:code", controllers.LegalEntityFind)
+
+		// Legal Entities
+		v1.GET("/terrorists", controllers.Terrorists)
+		//v1.GET("/legal-entities/view/:code", controllers.LegalEntityFind)
 	}
 
 	router.GET("/", controllers.Main)

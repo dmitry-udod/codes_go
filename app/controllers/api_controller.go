@@ -70,6 +70,29 @@ func LegalEntityFind(c *gin.Context) {
 	EntityNotfound(c)
 }
 
+
+func Terrorists(c *gin.Context) {
+	params := Params()
+	params["page"] = c.Request.URL.Query().Get("page")
+	params["q"] = c.Request.URL.Query().Get("q")
+	records, metadata := services.SearchTerrorists(params)
+
+	// Search
+	if metadata.Total == 0 {
+		id := params["q"]
+		params = Params();
+		params["id"] = id
+		records, metadata = services.SearchTerrorists(params)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": records,
+		"metadata": metadata,
+	})
+	return
+}
+
+
 func EntityNotfound(c *gin.Context) {
 	c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "Not Found"})
 }

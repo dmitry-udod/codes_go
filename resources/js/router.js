@@ -4,6 +4,7 @@ import Fop from "./components/Fop"
 import FopDetails from "./components/FopDetails"
 import LegalEntities from "./components/LegalEntities"
 import LegalEntityDetails from "./components/LegalEntityDetails"
+import Terrorists from "./components/Terrorists"
 
 Vue.use(Router);
 
@@ -43,6 +44,11 @@ const router = new Router({
             path: '/legal-entities/details/:id',
             name: 'legal_entities_details',
             component: LegalEntityDetails,
+        },
+        {
+            path: '/terrorists',
+            name: 'terrorists',
+            component: Terrorists,
         },
     ]
 });

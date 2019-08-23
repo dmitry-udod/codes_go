@@ -65,6 +65,11 @@ export default {
             return this.sendRequest('get', `legal-entities/view/${id}`)
         },
 
+        terrorists(request) {
+            request = this.formatRequest(request);
+            return this.sendRequest('get', `terrorists?page=${request.page}&q=${request.q}`);
+        },
+
         sendRequest(method, url, data, onlyUrl = false, onlyHost = false) {
             if (this.config.port && this.config.port !=='' && this.config.port.search(/:/) === -1) {
                 this.config.port =  ':' + this.config.port

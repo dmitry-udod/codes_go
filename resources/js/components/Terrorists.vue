@@ -1,10 +1,10 @@
 <template>
     <div>
-        <search title="Пошук юридичних осіб" @search="search" @clearSearch="clearSearch()"></search>
+        <search title="Пошук терористів" @search="search" @clearSearch="clearSearch()"></search>
 
         <div class="mt-5">
             <h1>
-                Список юридичних осіб
+                Список терористів
                 <span v-if="hasEntities()" class="float-right">знайдено: {{ metadata.total.toLocaleString() }}</span>
             </h1>
         </div>
@@ -18,10 +18,10 @@
                 <thead>
                 <tr>
                     <th class="py-4">
-                        Назва
+                        Номер
                     </th>
-                    <th class="py-4" style="width: 110px">
-                        ЄДРПОУ
+                    <th class="py-4">
+                        Ім'я
                     </th>
                     <th class="py-4">
                         Статус
@@ -32,8 +32,15 @@
                 </thead>
                 <tbody>
                 <tr v-for="e in entities">
-                    <td>{{ e.full_name }}</td>
-                    <td>{{ e.code }}</td>
+                    <td>{{ e.number_in_list }}</td>
+                    <td>
+                        <span v-if="e.known_names.length > 0">
+                        {{ e.known_names[0].last_name }}
+                        {{ e.known_names[0].first_name }}
+                        {{ e.known_names[0].middle_name }}
+                        {{ e.known_names[0].additional_name }}
+                        </span>
+                    </td>
                     <td>
                         <fop-status :status="e.status"></fop-status>
                     </td>
@@ -74,7 +81,7 @@
                 this.startLoading();
                 this.entities = [];
                 this.$route.params.page = page;
-                this.legalEntitiesLatest(this.$route.params).then(response => {
+                this.terrorists(this.$route.params).then(response => {
                     this.entities = response.data.data;
                     this.metadata = response.data.metadata;
                     this.stopLoading()
@@ -84,12 +91,12 @@
             search(q) {
                 this.q = q;
                 this.page = 1;
-                this.$router.push({name: 'legal_entities_search', params: {q: this.q}});
+                this.$router.push({name: 'terrorists', params: {q: this.q}});
                 this.entitiesList();
             },
 
             clearSearch() {
-                this.$router.push({name: 'legal_entities'});
+                this.$router.push({name: 'terrorists'});
                 this.entitiesList();
             },
         }

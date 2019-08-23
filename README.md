@@ -16,6 +16,7 @@ wget https://data.gov.ua/dataset/b244f35a-e50a-4a80-b704-032c42ba8142/resource/b
 unzip 15-ufop.zip
 go run main.go --import-legal-entity 15.1-EX_XML_EDR_UO.xml
 go run main.go --import-fop 15.2-EX_XML_EDR_FOP.xml
+go run main.go --import-terrorist zBlackListFull.xml
 ```
 
 ### Dokku deployment

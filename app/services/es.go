@@ -277,6 +277,29 @@ func SearchLegalEntities(params map[string]string) ([]models.LegalEntity, models
 	return records, metadata
 }
 
+func SearchTerrorists(params map[string]string) ([]models.Terrorist, models.Metadata) {
+	records := make([]models.Terrorist, 0)
+	metadata := models.Metadata{}
+
+	if ! InitElasticSearchClient() {
+		Log.Error("ES server is not available")
+		return records, metadata
+	}
+
+	entities, metadata := Search(models.INDEX_TERRORISTS, params)
+
+	if len(entities) > 0 {
+		for _, entity := range entities {
+			record := models.Terrorist{}
+			record.ParseFromSearch(entity)
+			records = append(records, record)
+		}
+	}
+
+	return records, metadata
+}
+
+
 type bulkResponse struct {
 	Errors bool `json:"errors"`
 	Items  []struct {

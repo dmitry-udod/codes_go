@@ -1,18 +1,6 @@
 <template>
     <div>
-        <div class="form active m-0">
-            <div class="row">
-                <div class="col-xl-9">
-                    <label for="key">Пошук ФОП:</label>
-                    <input type="text" id="key" name="key" class="text" autofocus v-model="q" @keyup.enter="search()">
-                    <span style="position: absolute;top: 40px;right: 25px;cursor: pointer" v-if="q" @click="clearSearch()">х</span>
-                    <div id="search-error" class="search-error"></div>
-                </div>
-                <div class="col-xl-3 d-flex align-items-end">
-                    <button class="btn_default yellow btn_search" :disabled="q === ''" @click="search()">Знайти</button>
-                </div>
-            </div>
-        </div>
+        <search title="Пошук ФОП" @search="search" @clearSearch="clearSearch()"></search>
 
         <div class="mt-5">
             <h1>
@@ -89,14 +77,14 @@
                 }, this.onError)
             },
 
-            search() {
+            search(q) {
+                this.q = q;
                 this.page = 1;
                 this.$router.push({name: 'fop_search', params: {q: this.q}});
                 this.fops();
             },
 
             clearSearch() {
-                this.q = '';
                 this.$router.push({name: 'fop'});
                 this.fops();
             },

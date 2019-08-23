@@ -34,6 +34,8 @@ func ParseTerroristXmlFile(file *os.File) (TerroristList, map[string]string) {
 		for akaIndex, akaName := range t.AkaNames {
 			list.Terrorists[index].AkaNames[akaIndex].FirstName = convertName(akaName.FirstName)
 			list.Terrorists[index].AkaNames[akaIndex].LastName = convertName(akaName.LastName)
+			list.Terrorists[index].AkaNames[akaIndex].MiddleName = convertName(akaName.MiddleName)
+			list.Terrorists[index].AkaNames[akaIndex].AdditionalName = convertName(akaName.AdditionalName)
 		}
 
 		for birthdayIndex, birthdayPlace := range t.BirthPlaces {

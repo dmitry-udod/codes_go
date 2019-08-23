@@ -24,6 +24,9 @@
                     <li class="menu__list-item" v-bind:class="{'active' : $route.name === 'legal_entities'}">
                         <a @click.stop.prevent="goToRoute('legal_entities')">Юридичні особи</a>
                     </li>
+                    <li class="menu__list-item" v-bind:class="{'active' : $route.name === 'terrorists'}">
+                        <a @click.stop.prevent="goToRoute('terrorists')">Перелік терористів</a>
+                    </li>
                 </ul>
             </nav>
         </div>

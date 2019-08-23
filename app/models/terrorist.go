@@ -1,5 +1,10 @@
 package models
 
+import (
+	"encoding/json"
+	"github.com/dmitry-udod/codes_go/logger"
+)
+
 const INDEX_TERRORISTS = "terrorists"
 
 type Terrorist struct {
@@ -18,4 +23,13 @@ type AkaName struct {
 	FirstName      string `xml:"aka-name2" json:"first_name"`
 	MiddleName     string `xml:"aka-name3" json:"middle_name"`
 	AdditionalName string `xml:"aka-name4" json:"additional_name"`
+}
+
+func (terrorist *Terrorist) ParseFromSearch(search interface{}) {
+	source, _ := json.Marshal(search.(map[string]interface{})["_source"])
+	err := json.Unmarshal(source, terrorist)
+
+	if err != nil {
+		logger.Log.Error(err.Error())
+	}
 }

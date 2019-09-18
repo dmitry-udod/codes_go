@@ -49,5 +49,9 @@ func SetupRouter() *gin.Engine  {
 
 	router.GET("/", controllers.Main)
 
+	router.NoRoute(func(c *gin.Context){
+		c.File("app/views/index.tmpl")
+	})
+
 	return router
 }

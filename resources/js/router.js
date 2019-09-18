@@ -9,6 +9,7 @@ import Terrorists from "./components/Terrorists"
 Vue.use(Router);
 
 const router = new Router({
+    mode: 'history',
     routes: [
         {
             path: '/',

@@ -5,6 +5,7 @@ import FopDetails from "./components/FopDetails"
 import LegalEntities from "./components/LegalEntities"
 import LegalEntityDetails from "./components/LegalEntityDetails"
 import Terrorists from "./components/Terrorists"
+import TerroristDetails from "./components/TerroristDetails"
 
 Vue.use(Router);
 
@@ -50,6 +51,16 @@ const router = new Router({
             path: '/terrorists',
             name: 'terrorists',
             component: Terrorists,
+        },
+        {
+            path: '/terrorists/search/:q',
+            name: 'terrorists_search',
+            component: Terrorists,
+        },
+        {
+            path: '/terrorists/details/:id',
+            name: 'terrorist_details',
+            component: TerroristDetails,
         },
     ]
 });

@@ -65,6 +65,10 @@ export default {
             return this.sendRequest('get', `legal-entities/view/${id}`)
         },
 
+        terroristDetails(id) {
+            return this.sendRequest('get', `terrorists/view/${id}`)
+        },
+
         terrorists(request) {
             request = this.formatRequest(request);
             return this.sendRequest('get', `terrorists?page=${request.page}&q=${request.q}`);

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <search title="Пошук терористів" @search="search" @clearSearch="clearSearch()"></search>
+        <search title="Пошук терористів" @search="search" @clearSearch="clearSearch()" placeholder="СБУ, ООН, Прізвище або Ім'я"></search>
 
         <div class="mt-5">
             <h1>
@@ -24,7 +24,7 @@
                         Ім'я
                     </th>
                     <th class="py-4">
-                        Статус
+                        Дата народження
                     </th>
                     <th class="py-4">
                     </th>
@@ -42,10 +42,10 @@
                         </span>
                     </td>
                     <td>
-                        <fop-status :status="e.status"></fop-status>
+                        {{ e.birth_day }}
                     </td>
                     <td>
-                        <router-link class="btn btn_default blue m-0" :to="{name: 'legal_entities_details', params: {id: e.code, q: q}}">Детальнiше</router-link>
+                        <router-link class="btn btn_default blue m-0" :to="{name: 'terrorist_details', params: {id: e.number_in_list, q: q}}">Детальнiше</router-link>
                     </td>
                 </tr>
                 </tbody>
@@ -54,7 +54,7 @@
             <hr>
 
             <div>
-                Джерело: <a target="_blank" href="https://data.gov.ua/dataset/1c7f3815-3259-45e0-bdf1-64dca07ddc10">https://data.gov.ua/dataset/1c7f3815-3259-45e0-bdf1-64dca07ddc10</a>
+                Джерело: <a target="_blank" href="http://www.sdfm.gov.ua/articles.php?cat_id=126&lang=uk">http://www.sdfm.gov.ua/articles.php?cat_id=126&lang=uk</a>
             </div>
         </div>
 
@@ -91,7 +91,7 @@
             search(q) {
                 this.q = q;
                 this.page = 1;
-                this.$router.push({name: 'terrorists', params: {q: this.q}});
+                this.$router.push({name: 'terrorists_search', params: {q: this.q}});
                 this.entitiesList();
             },
 

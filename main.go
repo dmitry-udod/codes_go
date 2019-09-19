@@ -27,49 +27,51 @@ func main() {
 }
 
 func isCliCommand() bool {
-	if len(os.Args) > 2 {
-		filePath := os.Args[2]
-		if _, err := os.Stat(filePath); os.IsNotExist(err) {
-			msg := fmt.Sprintf("File %s NOT found", filePath)
-			fmt.Println(msg)
-			Log.Fatal(msg);
-		}
+	if len(os.Args) < 2 {
+		return false
+	}
 
-		file, err := os.Open(filePath)
-		if err != nil {
-			Log.Fatal(err)
-		}
-		defer file.Close()
+	filePath := os.Args[2]
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		msg := fmt.Sprintf("File %s NOT found", filePath)
+		fmt.Println(msg)
+		Log.Fatal(msg);
+	}
 
-		Log.Info("Start processing file: " + filePath);
+	file, err := os.Open(filePath)
+	if err != nil {
+		Log.Fatal(err)
+	}
+	defer file.Close()
 
-		if *importFop != "" {
-			Log.Info("Run import FOP command")
-			cmd.ImportFop(file)
-			finishFileProcess(filePath)
-			return true
-		}
+	Log.Info("Start processing file: " + filePath);
 
-		if *importLegalEntity != "" {
-			Log.Info("Run import legal entity command")
-			cmd.ImportLegalEntity(file)
-			finishFileProcess(filePath)
-			return true
-		}
+	if *importFop != "" {
+		Log.Info("Run import FOP command")
+		cmd.ImportFop(file)
+		finishFileProcess(filePath)
+		return true
+	}
 
-		if *importTerrorists != "" {
-			Log.Info("Run import terrorists command")
-			cmd.ImportTerrorist(file)
-			finishFileProcess(filePath)
-			return true
-		}
+	if *importLegalEntity != "" {
+		Log.Info("Run import legal entity command")
+		cmd.ImportLegalEntity(file)
+		finishFileProcess(filePath)
+		return true
+	}
 
-		if *generateSiteMap != "" {
-			Log.Info("Start site map generation")
-			cmd.GenerateSiteMap(file)
-			Log.Info("Finish site map generation")
-			return true
-		}
+	if *importTerrorists != "" {
+		Log.Info("Run import terrorists command")
+		cmd.ImportTerrorist(file)
+		finishFileProcess(filePath)
+		return true
+	}
+
+	if *generateSiteMap != "" {
+		Log.Info("Start site map generation")
+		cmd.GenerateSiteMap(file)
+		Log.Info("Finish site map generation")
+		return true
 	}
 
 	return false

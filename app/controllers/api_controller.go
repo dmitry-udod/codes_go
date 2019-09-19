@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"github.com/dmitry-udod/codes_go/app/services"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -70,11 +71,12 @@ func LegalEntityFind(c *gin.Context) {
 	EntityNotfound(c)
 }
 
-
 func Terrorists(c *gin.Context) {
 	params := Params()
 	params["page"] = c.Request.URL.Query().Get("page")
 	params["q"] = c.Request.URL.Query().Get("q")
+	fields, _ := json.Marshal([]string{"source", "known_names.last_name", "known_names.first_name", "nationalities", "birth_places"})
+	params["fields"] = string(fields)
 	records, metadata := services.SearchTerrorists(params)
 
 	// Search
@@ -92,6 +94,20 @@ func Terrorists(c *gin.Context) {
 	return
 }
 
+func TerroristFind(c *gin.Context) {
+	params := Params()
+	params["id"] = c.Param("code")
+	records, _ := services.SearchTerrorists(params)
+
+	if len(records) > 0 {
+		c.JSON(http.StatusOK, gin.H{
+			"data": records[0],
+		})
+		return
+	}
+
+	EntityNotfound(c)
+}
 
 func EntityNotfound(c *gin.Context) {
 	c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "Not Found"})

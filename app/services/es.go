@@ -60,6 +60,15 @@ func Search(index string, params map[string]string) ([]interface{}, models.Metad
 	page, _ := strconv.Atoi(params["page"])
 	perPage := 10
 
+	fieldsJson, fieldsExist := params["fields"]
+	fields := []string{"full_name", "address", "activity"}
+	if fieldsExist {
+		err := json.Unmarshal([]byte(fieldsJson), &fields)
+		if err != nil {
+			Log.Errorf("Can't parse fields list: %s", err.Error())
+		}
+	}
+
 	var r map[string]interface{}
 	var buf bytes.Buffer
 
@@ -80,7 +89,7 @@ func Search(index string, params map[string]string) ([]interface{}, models.Metad
 				"multi_match": map[string]interface{}{
 					"query": search,
 					"type": "phrase_prefix",
-					"fields": [3]string{"full_name", "address", "activity"},
+					"fields": fields,
 				},
 			},
 		}
@@ -125,7 +134,7 @@ func Search(index string, params map[string]string) ([]interface{}, models.Metad
 	}
 
 	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
-		Log.Errorf("Error parsing the response body: %s", err)
+		Log.Errorf("Error parsing the response body: %s, %v", err, fields)
 	}
 
 	total := int(r["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"].(float64))

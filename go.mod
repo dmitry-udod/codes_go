@@ -8,9 +8,9 @@ require (
 	github.com/elastic/go-elasticsearch/v8 v8.0.0-20190625055212-2870f808ff85
 	github.com/gin-gonic/gin v1.4.0
 	github.com/go-martini/martini v0.0.0-20170121215854-22fa46961aab // indirect
-	github.com/google/gofuzz v1.0.0 // indirect
+	github.com/matryer/is v1.2.0
 	github.com/sirupsen/logrus v1.4.2
 	github.com/stretchr/testify v1.3.0
 	golang.org/x/net v0.0.0-20190503192946-f4e77d36d62c
-	golang.org/x/text v0.3.2
+	golang.org/x/text v0.3.2 // indirect
 )

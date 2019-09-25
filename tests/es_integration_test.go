@@ -5,7 +5,7 @@ import (
 	"github.com/dmitry-udod/codes_go/app/controllers"
 	"github.com/dmitry-udod/codes_go/app/models"
 	"github.com/dmitry-udod/codes_go/app/services"
-	"github.com/stretchr/testify/assert"
+	"github.com/matryer/is"
 	"testing"
 )
 
@@ -24,9 +24,10 @@ func TestSaveAndSearchData(t *testing.T) {
 	jsonString, _ := json.Marshal(record)
 	m[record.GenerateId()] = string(jsonString)
 
+	assert := is.New(t)
 	resp := services.SaveDataToEs(TEST_INDEX, m)
-	assert.Equal(t, 201, resp.Items[0].Index.Status)
-	assert.Equal(t, TEST_DOCUMENT_ID, resp.Items[0].Index.ID)
+	assert.Equal(201, resp.Items[0].Index.Status)
+	assert.Equal(TEST_DOCUMENT_ID, resp.Items[0].Index.ID)
 
 	params := controllers.Params()
 	params["id"] = TEST_DOCUMENT_ID
@@ -35,9 +36,9 @@ func TestSaveAndSearchData(t *testing.T) {
 	search := new(models.Record)
 	search.ParseFromSearch(entities[0])
 
-	assert.Equal(t, record.Address, search.Address)
-	assert.Equal(t, record.FullName, search.FullName)
-	assert.Equal(t, uint(1), metadata.Total)
+	assert.Equal(record.Address, search.Address)
+	assert.Equal(record.FullName, search.FullName)
+	assert.Equal(uint(1), metadata.Total)
 }
 
 func checkConnectionToEsServer(t *testing.T) bool {
@@ -52,6 +53,6 @@ func checkConnectionToEsServer(t *testing.T) bool {
 	return isConnected
 }
 
-func clearTestIndex()  {
+func clearTestIndex() {
 	services.DeleteDataFromEs(TEST_INDEX, TEST_DOCUMENT_ID)
 }

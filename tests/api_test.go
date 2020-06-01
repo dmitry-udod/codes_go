@@ -50,13 +50,7 @@ func TestFopLatest(t *testing.T) {
 	assert.Equal(200, w.Code)
 	assert.True(strings.Contains(w.Body.String(), "full_name"))
 	assert.True(strings.Contains(w.Body.String(), "metadata"))
-	assert.True(strings.Contains(w.Body.String(), "total:"))
-
-	w = httptest.NewRecorder()
-	req, _ = http.NewRequest("GET", "/api/v1/fop/latest?page=2", nil)
-	r.ServeHTTP(w, req)
-	assert.Equal( 200, w.Code)
-	assert.True(strings.Contains(w.Body.String(), TEST_FOP_NAME))
+	assert.True(strings.Contains(w.Body.String(), "total"))
 }
 
 func TestFopSearchQuery(t *testing.T) {

@@ -88,11 +88,13 @@ func Search(index string, params map[string]string) ([]interface{}, models.Metad
 			"query": map[string]interface{}{
 				"multi_match": map[string]interface{}{
 					"query": search,
-					"type": "phrase_prefix",
+					"type": "cross_fields",
+					"operator": "AND",
 					"fields": fields,
 				},
 			},
 		}
+
 	}
 
 	if err := json.NewEncoder(&buf).Encode(query); err != nil {

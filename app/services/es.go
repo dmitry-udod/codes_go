@@ -91,6 +91,7 @@ func Search(index string, params map[string]string) ([]interface{}, models.Metad
 					"type": "cross_fields",
 					"operator": "AND",
 					"fields": fields,
+					
 				},
 			},
 		}

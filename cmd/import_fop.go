@@ -66,6 +66,9 @@ func ImportFop(file *os.File) {
 			}
 		}
 	}
+
+	fmt.Printf("[ELASTIC] Save data bulk")
+	es.SaveDataToEs(INDEX_FOP, pack)
 }
 
 func DecodeFopXmlString(str string) Record {

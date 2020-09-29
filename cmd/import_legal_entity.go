@@ -35,14 +35,13 @@ func ImportLegalEntity(file *os.File) {
 		case xml.StartElement:
 			if se.Name.Local == "RECORD" {
 				linesCount++
-				fmt.Println(fmt.Sprintf("Process line number: %d", linesCount))
 
 				var record models.LegalEntity
 				err := decoder.DecodeElement(&record, &se)
 
 				if err != nil {
 					Log.Error(err)
-					continue
+					fmt.Printf("[XML] Decode error: %s", err)
 				}
 
 				bulk++
@@ -60,14 +59,13 @@ func ImportLegalEntity(file *os.File) {
 
 				if record.FullName != "" {
 					jsonData, err := json.Marshal(record)
-
 					if err == nil {
 						pack[record.Code] = string(jsonData)
 					}
 				}
 
 				if bulk > 10000 {
-					fmt.Printf("[ELASTIC] Save data bulk")
+					fmt.Println(fmt.Sprintf("[ELASTIC] Save data bulk [%d]", linesCount))
 					es.SaveDataToEs(models.INDEX_LEGAL_ENTITY, pack)
 					bulk = 0
 					pack = make(map[string]string, 0)
@@ -76,4 +74,6 @@ func ImportLegalEntity(file *os.File) {
 		}
 	}
 
+	fmt.Println(fmt.Sprintf("[ELASTIC] Save data bulk [%d]", linesCount))
+	es.SaveDataToEs(models.INDEX_LEGAL_ENTITY, pack)
 }
